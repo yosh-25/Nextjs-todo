@@ -1,17 +1,35 @@
 "use client";
-import { SessionProvider, signOut, useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
+import { useEffect } from "react";
+import { signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
-  const session = useSession();
-  if (session) {
-    return (
+  const {data: session, status} = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push('/signin');
+  }}, [status, router]);
+
+  const signOutAndRedirect = async () => {    
+    await signOut({redirect: false});
+
+    router.push('/signin')
+    
+  }
+
+  if (status === "loading") {
+    return <p>Loading</p>;
+  }
+
+  return (
       <>
-        <div>{session?.data?.user?.name}</div>
-        <button onClick={() => signOut()}>Logout</button>
+        <div>{session?.user?.name}</div>
+        <button onClick={() => signOutAndRedirect()}>Logout</button>
+        <br/>
+        <button onClick={() => router.push('/todos')} >todosへ</button>
       </>
     );
-  } else {
-    redirect('/')
   }
-}
+
