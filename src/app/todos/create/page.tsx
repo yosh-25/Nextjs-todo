@@ -6,7 +6,7 @@ import { collection, addDoc } from "firebase/firestore";
 
 export default function Create() {
   type NewTodo = {
-    // id: string;
+    id: string;
     todoTitle: string;
     todoContent: string;
     deadline: string;
@@ -24,6 +24,7 @@ export default function Create() {
   ) => {
     e.preventDefault();
     await addDoc(collection(db, "todos"), {
+      id: uuidv4(),
       todoTitle: addTodoTitle,
       todoContent: addTodoContent,
       deadline: addDeadline,

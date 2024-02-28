@@ -1,22 +1,48 @@
-"use client";
-import { getDoc, doc, getFirestore } from "firebase/firestore";
-import React, { useEffect, useState } from "react";
-import { db } from "../../../../lib/firebase";
+'use client';
 
-export async function getTodoData(docId: string) {
-  const todoRef = doc(db, "todos", docId);
-  const docSnap = await getDoc(todoRef);
-  if (docSnap.exists()) {
-    const data = docSnap.data();
-    const todoData = {
-      todoTitle: data!.todoTitle,
-      todoContent: data!.todoContent,
-      deadline: data!.deadline,
-      deadlineStatus: data!.deadlineStatus,
-      status: data!.status,
-    };
-    return todoData;
-  } else {
-    console.log("No such document!");
-  }
+import { useParams } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
+import { doc, getDoc, getFirestore } from 'firebase/firestore';
+import { db } from '../../../../lib/firebase';
+
+type Todo = {
+    id: string;
+    title: string;
+    content: string;
+    deadline: string;
+    deadlineStatus: string;
+    status: string;
+  };
+
+const TodoPage = () => {
+    const [todo, setTodo] = useState<Todo | undefined>(undefined);
+    const params = useParams()
+    // const id = params?.id
+    // from here
+
+    useEffect(() => {
+        const fetchTodo = async () => {
+            if(typeof id === 'string') {
+            const docRef = doc(db, 'todo', id);
+            const docSnap = await getDoc(docRef);
+            setTodo({
+                ...docSnap.data() as Todo
+            })
+        }}
+        fetchTodo();
+    }, [id]);
+
+    return (
+        <div>
+            <h1>{todo?.title}</h1>
+            <p>{todo?.content}</p>
+
+
+        </div>
+
+    )
+
+
 }
+
+export default TodoPage;
