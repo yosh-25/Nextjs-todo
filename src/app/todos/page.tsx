@@ -3,7 +3,7 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { getFirestore, doc, getDocs, collection } from "firebase/firestore";
+import { getFirestore, doc, getDoc, getDocs, collection } from "firebase/firestore";
 import { db } from "../../../lib/firebase";
 
 
@@ -28,12 +28,14 @@ const TodoList = () => {
     }
   }, [status, router]);
 
+  // from here
   useEffect(() => {
     const fetchTodos = async () => {
       const querySnapshot = await getDocs(collection(db, "todos"));
-      const todoList = querySnapshot.docs.map((doc) => ({
-        ...(doc.data() as NewTodo),
-      }));
+      const todoList = querySnapshot.docs.map((doc) => {
+        id: doc.id,
+        ...doc.data() 
+      });
       setTodoList(todoList);
     };
     fetchTodos();
