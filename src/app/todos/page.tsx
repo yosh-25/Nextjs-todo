@@ -34,8 +34,8 @@ const TodoList = () => {
     const fetchTodos = async () => {
       const querySnapshot = await getDocs(collection(db, "todos"));
       const todoList = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data() as NewTodo
+        ...doc.data() as NewTodo,
+        id: doc.id,        
       }));
       setTodoList(todoList);
     };
