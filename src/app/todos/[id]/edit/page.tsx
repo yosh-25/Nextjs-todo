@@ -1,8 +1,15 @@
 "use client";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { doc, getDoc, addDoc, setDoc, updateDoc, deleteDoc } from "firebase/firestore";
-import { db } from "../../../../lib/firebase";
+import {
+  doc,
+  getDoc,
+  addDoc,
+  setDoc,
+  updateDoc,
+  deleteDoc,
+} from "firebase/firestore";
+import { db } from "../../../../../lib/firebase";
 
 type Todo = {
   id: string;
@@ -14,9 +21,9 @@ type Todo = {
   comment?: string;
 };
 
-export default function todoPage({ params }: { params: { id: string } }) {
+export default function todoEditPage({ params }: { params: { id: string } }) {
   const [todo, setTodo] = useState<Todo | undefined>(undefined);
-  const [comment, setComment] = useState<string>("");
+  const [newTitle, setNewTitle] = useState<string>("");
   const id = params.id;
   const router = useRouter();
 
@@ -45,13 +52,9 @@ export default function todoPage({ params }: { params: { id: string } }) {
     });
   };
 
-  const onClickDeleteTodo = async (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
-    e.preventDefault();
-        await deleteDoc(doc(db, 'todos', id))
-        router.push('/todos/')
-        
+  const onChangeEditTodoTitle = async () => {
+    setTodo((prevState:any) => ({...prevState, title: `${newTitle}`}));
+    console.log(todo)
   };
 
   return (
@@ -71,32 +74,14 @@ export default function todoPage({ params }: { params: { id: string } }) {
             className="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none"
             onClick={onClickAddComment}
           >
-            コメントを保存
+            保存
           </button>
         </li>
-        <p className="outline-none">{todo?.title}</p>
-        <p className="outline-none">{todo?.content}</p>
-        <p className="outline-none">{todo?.status}</p>
-        <p className="outline-none">{todo?.deadline}</p>
-        <input
-          type="text"
-          value={comment}
-          onChange={(e) => setComment(e.target.value)}
-          placeholder="コメントを入力"
+        <input type="text" value={todo?.title} 
+        onChange={(e)=> setNewTitle(e.target.value)}
         />
-        <button
-          type="button"
-          className="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none"
-          onClick={onClickDeleteTodo}
-        >
-          削除
-        </button>
-        <button
-          type="button"
-          className="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none"
-        >
-          編集
-        </button>
+        <input type="text" value={todo?.deadline} />
+        <input type="text" value={todo?.status} />
       </ul>
     </>
   );

@@ -24,8 +24,8 @@ export default function Create() {
   ) => {
     e.preventDefault();
     await addDoc(collection(db, "todos"), {
-      Title: addTodoTitle,
-      Content: addTodoContent,
+      title: addTodoTitle,
+      content: addTodoContent,
       deadline: addDeadline,
       deadlineStatus: "期限前",
       status: "未完了",
