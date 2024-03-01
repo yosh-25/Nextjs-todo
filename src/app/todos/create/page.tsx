@@ -24,12 +24,12 @@ export default function Create() {
   ) => {
     e.preventDefault();
     await addDoc(collection(db, "todos"), {
-      id: uuidv4(),
-      todoTitle: addTodoTitle,
-      todoContent: addTodoContent,
+      Title: addTodoTitle,
+      Content: addTodoContent,
       deadline: addDeadline,
       deadlineStatus: "期限前",
       status: "未完了",
+      comment: ''
     });
     // console.log('pushed')
   };

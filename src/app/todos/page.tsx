@@ -10,11 +10,12 @@ import { db } from "../../../lib/firebase";
 const TodoList = () => {
   type NewTodo = {
     id: string;
-    todoTitle: string;
-    todoContent: string;
+    title: string;
+    content: string;
     deadline: string;
     deadlineStatus: string;
     status: string;
+    comment: string
   };
 
   const { status } = useSession();
@@ -28,17 +29,18 @@ const TodoList = () => {
     }
   }, [status, router]);
 
-  // from here
+ 
   useEffect(() => {
     const fetchTodos = async () => {
       const querySnapshot = await getDocs(collection(db, "todos"));
-      const todoList = querySnapshot.docs.map((doc) => {
+      const todoList = querySnapshot.docs.map((doc) => ({
         id: doc.id,
-        ...doc.data() 
-      });
+        ...doc.data() as NewTodo
+      }));
       setTodoList(todoList);
     };
     fetchTodos();
+    
   }, []);
 
   return (
@@ -53,14 +55,18 @@ const TodoList = () => {
             <p className="outline-none">Content</p>
             <p className="outline-none">Deadline</p>
             <p className="outline-none">Status</p>
+            <p className="outline-none">Comment</p>
           </li>
           {todoList.map((todo: NewTodo) => (
             <li key={todo.id} className="flex justify-between  pl-14 pr-14 ">
               <Link href={`/todos/${todo.id}`}>
-                <p className="outline-none">{todo.todoTitle}</p>
-                <p className="outline-none">{todo.todoContent}</p>
+
+                <p className="outline-none">{todo.id}</p>
+                <p className="outline-none">{todo.title}</p>
+                <p className="outline-none">{todo.content}</p>
                 <p className="outline-none">{todo.deadline}</p>
                 <p className="outline-none">{todo.status}</p>
+                <p className="outline-none">{todo.comment}</p>
               </Link>
             </li>
           ))}
