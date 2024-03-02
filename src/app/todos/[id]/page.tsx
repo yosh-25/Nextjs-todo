@@ -68,7 +68,6 @@ export default function todoPage({ params }: { params: { id: string } }) {
 
   return (
     <>
-      <div className="flex flex-col space-y-10 justify-center items-center mt-10 min-h">
         <div>
           <h1 className="text-3xl font-bold">Todo詳細</h1>
         </div>
@@ -80,11 +79,11 @@ export default function todoPage({ params }: { params: { id: string } }) {
             <p className="outline-none w-1/6 ">Status</p>
             <p className="outline-none w-1/6 ">Comment</p>
           </li>
-          <li className="flex justify-between mb-6 pb-2 border-b border-blue-00">
+          <li className="flex justify-between mb-3 pb-2 border-b border-blue-00">
             <p className="outline-none w-1/6 ">{todo?.title}</p>
             <p className="outline-none w-1/6 ">{todo?.content}</p>
-            <p className="outline-none w-1/6 ">{todo?.status}</p>
             <p className="outline-none w-1/6 ">{todo?.deadline}</p>
+            <p className="outline-none w-1/6 ">{todo?.status}</p>            
             <input
               className="w-1/6"
               type="text"
@@ -130,7 +129,6 @@ export default function todoPage({ params }: { params: { id: string } }) {
             </button>
           </div>
         </div>
-      </div>
     </>
   );
 }

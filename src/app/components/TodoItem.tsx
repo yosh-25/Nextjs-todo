@@ -24,5 +24,4 @@ const TodoItemComponent: React.FC<TodoItemProps> = ({todo}) => {
     )
 };
 
-
 export default TodoItemComponent;

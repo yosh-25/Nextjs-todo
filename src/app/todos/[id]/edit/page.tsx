@@ -37,6 +37,7 @@ export default function todoEdit({ params }: { params: { id: string } }) {
     const docRef = doc(db, "todos", id);
     await updateDoc(docRef, {
       title: todo?.title,
+      content: todo?.content,
       status: todo?.status,
       deadline: todo?.deadline,
       comment: todo?.comment,
@@ -90,7 +91,7 @@ export default function todoEdit({ params }: { params: { id: string } }) {
   return (
     <>
         <div className="mb-3">
-          <h1 className="text-3xl font-bold">My todo</h1>
+          <h1 className="text-3xl font-bold">Todo編集</h1>
         </div>
         <ul className="space-y-3 text-xl w-9/12">
           <li className="flex justify-between  pl-14 pr-14 ">
@@ -99,7 +100,7 @@ export default function todoEdit({ params }: { params: { id: string } }) {
             <p className="outline-none w-1/6">締め切り</p>
             <p className="outline-none w-1/6">ステータス</p>
           </li>
-          <li className="flex justify-between  pl-14 pr-14   mb-6 pb-2 border-b border-blue-00">
+          <li className="flex justify-between  pl-14 pr-14 mb-6  border-b border-blue-00">
             <div className="outline-none w-1/6">
               <input
                 className="outline-none w-full"

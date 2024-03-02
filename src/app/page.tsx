@@ -25,7 +25,7 @@ export default function Home() {
     <>
       <div className="flex flex-col space-y-4 justify-center items-center mt-10 min-h">
         <div className='pb-5' >
-          <h1 className="text-3xl font-bold">ホーム画面</h1>
+          <h1 className="text-3xl font-bold">Todoアプリ</h1>
         </div>
 
         <button

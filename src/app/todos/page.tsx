@@ -127,11 +127,11 @@ const TodoList = () => {
       </div>
       <ul className="space-y-2  text-xl w-9/12">
         <li className="flex justify-between mb-6">
-          <p className="outline-none w-1/6 ">Title</p>
-          <p className="outline-none w-1/6">Content</p>
-          <p className="outline-none w-1/6">Deadline</p>
-          <p className="outline-none w-1/6">Status</p>
-          <p className="outline-none w-1/6">Comment</p>
+          <p className="outline-none w-1/6 ">タイトル</p>
+          <p className="outline-none w-1/6">内容</p>
+          <p className="outline-none w-1/6">締め切り</p>
+          <p className="outline-none w-1/6">ステータス</p>
+          <p className="outline-none w-1/6">コメント</p>
         </li>
         {filteredTodoList.map((todo: TodoItem) => (
          <TodoItemComponent key={todo.id} todo={todo} />

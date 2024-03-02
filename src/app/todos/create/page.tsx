@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { TodoItem } from "@/app/types";
 
 export default function CreateTodo() {
-
   const [todo, setTodo] = useState<TodoItem | null>();
   const [error, setError] = useState("");
   const router = useRouter();
@@ -64,12 +63,19 @@ export default function CreateTodo() {
     router.push(`/todos`);
   };
 
+  const clickToMoveToTodoList = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e.preventDefault();
+    router.push(`/todos/`);
+  };
+
   return (
     <>
       <div>
         <h1 className="text-3xl font-bold">Todo新規作成</h1>
       </div>
-      <ul className="space-y-3  text-xl w-3/5">
+      <ul className="space-y-1  text-xl w-3/5">
         <li className="flex justify-between mb-6">
           <p className="outline-none w-1/6 ">タイトル</p>
           <p className="outline-none w-1/6">内容</p>
@@ -77,7 +83,7 @@ export default function CreateTodo() {
         </li>
         <li className="flex justify-between mb-6">
           <input
-            className=" w-1/3 "
+            className=" w-1/5 border border-solid rounded p-2  border-slate-300"
             type="text"
             placeholder="ここに入力"
             value={todo?.title}
@@ -85,7 +91,7 @@ export default function CreateTodo() {
           />
 
           <input
-            className=" w-1/3 "
+            className=" w-1/5 border border-solid rounded p-2  border-slate-300"
             type="text"
             placeholder="ここに入力"
             value={todo?.content}
@@ -93,25 +99,33 @@ export default function CreateTodo() {
           />
 
           <input
-            className=" w-1/6 "
+            className=" w-1/5 border border-solid rounded p-2  border-slate-300"
             type="date"
             value={todo?.deadline}
             onChange={addDeadline}
           />
         </li>
 
-        <li className="flex justify-center mb-6">
+        <li className="flex justify-center">
           {error && <p className="text-red-500 ">{error}</p>}
         </li>
       </ul>
-
-      <button
-        type="submit"
-        className="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none"
-        onClick={clickToSubmit}
-      >
-        追加
-      </button>
+      <div className="flex">
+        <button
+          type="button"
+          className="text-white bg-blue-700 hover:bg-blue-800 mt-8 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none"
+          onClick={clickToSubmit}
+        >
+          追加
+        </button>
+        <button
+          type="button"
+          className="text-white bg-blue-700 hover:bg-blue-800 mt-8 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none"
+          onClick={clickToMoveToTodoList}
+        >
+          一覧に戻る
+        </button>
+      </div>
     </>
   );
 }
