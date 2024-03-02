@@ -1,10 +1,9 @@
-import { authOptions } from "../../pages/api/auth/[...nextauth]";
-import { getServerSession } from "next-auth";
+// import { authOptions } from "../../pages/api/auth/[...nextauth]";
+// import { getServerSession } from "next-auth";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import SessionProvider from "./SessionProvider";
-import Home from "./page";
+// import SessionProvider from "./SessionProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,13 +17,15 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await getServerSession(authOptions);
+  // const session = await getServerSession(authOptions);
   return (
     <html lang="ja">
       <body className={inter.className}>
-      <SessionProvider session={session} >
+      <div className="flex flex-col space-y-10 justify-center items-center mb-5 mt-12">
+      {/* <SessionProvider session={session} > */}
       {children}
-      </SessionProvider>
+      {/* </SessionProvider> */}
+      </div>
       </body>
     </html>
   );

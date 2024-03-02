@@ -4,27 +4,14 @@ import React, { useEffect, useState } from "react";
 import {
   doc,
   getDoc,
-  addDoc,
-  setDoc,
   updateDoc,
-  deleteDoc,
-  collection,
 } from "firebase/firestore";
 import { db } from "../../../../../lib/firebase";
+import { TodoItem } from "@/app/types";
 
-type Todo = {
-  id: string;
-  title: string;
-  content: string;
-  deadline: string;
-  deadlineStatus: string;
-  status: string;
-  comment?: string;
-};
-
-export default function todoPage({ params }: { params: { id: string } }) {
-  const [todo, setTodo] = useState<Todo | undefined>(undefined);
-  const [comment, setComment] = useState<string>("");
+export default function todoEdit({ params }: { params: { id: string } }) {
+  const [todo, setTodo] = useState<TodoItem | undefined>(undefined);
+  const [succeed, SetSucceed] = useState<string>("");
   const id = params.id;
   const router = useRouter();
 
@@ -34,7 +21,7 @@ export default function todoPage({ params }: { params: { id: string } }) {
         const docRef = doc(db, "todos", id);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
-          setTodo(docSnap.data() as Todo);
+          setTodo(docSnap.data() as TodoItem);
         }
       }
     };
@@ -43,7 +30,7 @@ export default function todoPage({ params }: { params: { id: string } }) {
     }
   }, [id]);
 
-  const onClickSaveEdit = async (
+  const clickToSaveEdit = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.preventDefault();
@@ -52,8 +39,9 @@ export default function todoPage({ params }: { params: { id: string } }) {
       title: todo?.title,
       status: todo?.status,
       deadline: todo?.deadline,
-      comment: comment,
+      comment: todo?.comment,
     });
+    SetSucceed("保存できました！");
   };
 
   const updateTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -83,7 +71,7 @@ export default function todoPage({ params }: { params: { id: string } }) {
     }
   };
 
-  const updateStatus = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const updateStatus = (e: React.ChangeEvent<HTMLSelectElement>) => {
     if (todo) {
       setTodo({
         ...todo,
@@ -92,17 +80,16 @@ export default function todoPage({ params }: { params: { id: string } }) {
     }
   };
 
-  const onClickMoveToTodoList = (
+  const clickToMoveToTodoList = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-    ) => {
-      e.preventDefault();
-      router.push(`/todos/`);
-    };
+  ) => {
+    e.preventDefault();
+    router.push(`/todos/`);
+  };
 
   return (
     <>
-      <div className="flex flex-col space-y-10 justify-center items-center mt-10 min-h">
-        <div className='mb-3'>
+        <div className="mb-3">
           <h1 className="text-3xl font-bold">My todo</h1>
         </div>
         <ul className="space-y-3 text-xl w-9/12">
@@ -116,6 +103,7 @@ export default function todoPage({ params }: { params: { id: string } }) {
             <div className="outline-none w-1/6">
               <input
                 className="outline-none w-full"
+                type="text"
                 value={todo?.title}
                 onChange={(e) => {
                   updateTitle(e);
@@ -126,6 +114,7 @@ export default function todoPage({ params }: { params: { id: string } }) {
             <div className="outline-none w-1/6">
               <input
                 className="outline-none w-full"
+                type="text"
                 value={todo?.content}
                 onChange={(e) => {
                   updateContent(e);
@@ -136,6 +125,7 @@ export default function todoPage({ params }: { params: { id: string } }) {
             <div className="outline-none w-1/6">
               <input
                 className="outline-none w-full"
+                type="date"
                 value={todo?.deadline}
                 onChange={(e) => {
                   updateDeadline(e);
@@ -144,33 +134,39 @@ export default function todoPage({ params }: { params: { id: string } }) {
             </div>
 
             <div className="outline-none w-1/6">
-              <input
-                className="outline-none w-full"
+              <select
+                className="border border-solid rounded p-2  border-slate-300"
                 value={todo?.status}
                 onChange={(e) => {
                   updateStatus(e);
                 }}
-              />
+              >
+                <option value="未完了">未完了</option>
+                <option value="途中">途中</option>
+                <option value="完了">完了</option>
+              </select>
             </div>
           </li>
-          <div className="flex justify-center ">
-            <button
-              type="button"
-              className="text-white bg-blue-700 hover:bg-blue-800 mt-8 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none"
-              onClick={onClickSaveEdit}
-            >
-              保存
-            </button>
-            <button
-              type="button"
-              className="text-white bg-blue-700 hover:bg-blue-800 mt-8 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none"
-              onClick={onClickMoveToTodoList}
-            >
-              一覧に戻る
-            </button>
+          <div className="flex flex-col justify-center ">
+            <div className="flex  justify-center " >
+              <button
+                type="button"
+                className="text-white bg-blue-700 hover:bg-blue-800 mt-8 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none"
+                onClick={clickToSaveEdit}
+              >
+                保存
+              </button>
+              <button
+                type="button"
+                className="text-white bg-blue-700 hover:bg-blue-800 mt-8 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none"
+                onClick={clickToMoveToTodoList}
+              >
+                一覧に戻る
+              </button>
+            </div>
+            <div className="flex justify-center" >{succeed && <p>{succeed}</p>}</div>
           </div>
         </ul>
-      </div>
     </>
   );
 }

@@ -10,19 +10,10 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 import { db } from "../../../../lib/firebase";
-
-type Todo = {
-  id: string;
-  title: string;
-  content: string;
-  deadline: string;
-  deadlineStatus: string;
-  status: string;
-  comment?: string;
-};
+import { TodoItem } from "@/app/types";
 
 export default function todoPage({ params }: { params: { id: string } }) {
-  const [todo, setTodo] = useState<Todo | undefined>(undefined);
+  const [todo, setTodo] = useState<TodoItem | undefined>(undefined);
   const [comment, setComment] = useState<string>("");
   const id = params.id;
   const router = useRouter();
@@ -33,7 +24,7 @@ export default function todoPage({ params }: { params: { id: string } }) {
         const docRef = doc(db, "todos", id);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
-          setTodo(docSnap.data() as Todo);
+          setTodo(docSnap.data() as TodoItem);
         }
       }
     };
@@ -42,7 +33,7 @@ export default function todoPage({ params }: { params: { id: string } }) {
     }
   }, [id]);
 
-  const onClickAddComment = async (
+  const addComment = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.preventDefault();
@@ -52,7 +43,7 @@ export default function todoPage({ params }: { params: { id: string } }) {
     });
   };
 
-  const onClickDeleteTodo = async (
+  const clickToDeleteTodo = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.preventDefault();
@@ -60,14 +51,14 @@ export default function todoPage({ params }: { params: { id: string } }) {
     router.push("/todos/");
   };
 
-  const onClickMoveToEdit = async (
+  const clickToMoveToEdit = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.preventDefault();
     router.push(`/todos/${id}/edit`);
   };
 
-  const onClickMoveToTodoList = (
+  const clickToMoveToTodoList = (
   e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.preventDefault();
@@ -108,7 +99,7 @@ export default function todoPage({ params }: { params: { id: string } }) {
             <button
               type="button"
               className="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none"
-              onClick={onClickAddComment}
+              onClick={addComment}
             >
               コメントを保存
             </button>
@@ -118,14 +109,14 @@ export default function todoPage({ params }: { params: { id: string } }) {
             <button
               type="button"
               className="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none"
-              onClick={onClickMoveToEdit}
+              onClick={clickToMoveToEdit}
             >
               編集
             </button>
             <button
               type="button"
               className="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none"
-              onClick={onClickDeleteTodo}
+              onClick={clickToDeleteTodo}
             >
               削除
             </button>
@@ -133,7 +124,7 @@ export default function todoPage({ params }: { params: { id: string } }) {
             <button
               type="button"
               className="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none"
-              onClick={onClickMoveToTodoList}
+              onClick={clickToMoveToTodoList}
             >
               一覧に戻る
             </button>
