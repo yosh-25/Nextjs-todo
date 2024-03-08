@@ -13,8 +13,16 @@ import { db } from "../../../../lib/firebase";
 import { TodoItem } from "@/app/types";
 
 export default function todoPage({ params }: { params: { id: string } }) {
-  const [todo, setTodo] = useState<TodoItem | undefined>(undefined);
-  const [comment, setComment] = useState<string>("");
+  const [todo, setTodo] = useState<TodoItem>({
+    id: "",
+    title: "",
+    content: "",
+    deadline: "",
+    deadlineStatus: "",
+    status: "",
+    comment: "",
+  });
+  const [comment, setComment] = useState<string>(``);
   const [succeed, setSucceed] = useState<string>("");
   const id = params.id;
   const router = useRouter();
@@ -25,7 +33,9 @@ export default function todoPage({ params }: { params: { id: string } }) {
         const docRef = doc(db, "todos", id);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
-          setTodo(docSnap.data() as TodoItem);
+          const fetchTodo = docSnap.data() as TodoItem;
+          setTodo(fetchTodo)
+          setComment(fetchTodo.comment);
         }
       }
     };
@@ -90,12 +100,13 @@ export default function todoPage({ params }: { params: { id: string } }) {
             type="text"
             value={comment}
             onChange={(e) => setComment(e.target.value)}
-            placeholder="コメント入力"
+            placeholder= "コメントが入力できます"
           />
         </li>
       </ul>
       <div className="!mt-4 w-9/12">
         <div className="flex flex-col mb-8">
+          <p className="text-right text-xs mb-3" >↑直接入力で変更可</p>
           <div className="flex justify-end">
             <button
               type="button"
