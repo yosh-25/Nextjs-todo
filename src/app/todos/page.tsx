@@ -17,14 +17,16 @@ import TodoItemComponent from "../components/TodoItem";
 const TodoList = () => {
   type Filter = "全て" | "未完了" | "途中" | "完了";
   type FilterDate = "全て" | "期限前" | "今日" | "期限切れ";
+  type SortDate = "未選択" | "昇順" | "降順";
 
   // const { status } = useSession();
   const router = useRouter();
 
   const [todoList, setTodoList] = useState<TodoItem[]>([]);
-  const [filteredTodoList, setFilteredTodoList] = useState<TodoItem[]>([]);
+  const [filteredAndSortedTodoList, setFilteredAndSortedTodoList] = useState<TodoItem[]>([]);
   const [filterByDate, setFilterByDate] = useState<FilterDate>("全て");
   const [filterByStatus, setFilterByStatus] = useState<Filter>("全て");
+  const [sortByDate, setSortByDate] = useState<SortDate>("未選択");
 
   // useEffect(() => {
   //   if (status === "unauthenticated") {
@@ -49,7 +51,7 @@ const TodoList = () => {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
   
-      const filtered = todoList.filter((todo) => {
+      let filtered = todoList.filter((todo) => {
         const deadlineDate = new Date(todo.deadline);
         deadlineDate.setHours(0, 0, 0, 0);
   
@@ -66,12 +68,20 @@ const TodoList = () => {
   
         return false;
       });
-  
-      setFilteredTodoList(filtered);
+
+      if (sortByDate === "昇順") {
+        filtered = filtered.sort((a, b) => new Date(a.deadline).getTime() - new Date(b.deadline).getTime());
+      } 
+      if (sortByDate === "降順") {
+        filtered = filtered.sort((a, b) => new Date(b.deadline).getTime() - new Date(a.deadline).getTime());
+      }
+      
+      setFilteredAndSortedTodoList(filtered);
     };
+
   
     filteringTodoList();
-  }, [todoList, filterByDate, filterByStatus]);
+  }, [todoList, filterByDate, filterByStatus, sortByDate]);
   
  
 
@@ -95,7 +105,7 @@ const TodoList = () => {
           <p className="outline-none w-1/6">ステータス</p>
           <p className="outline-none w-1/6">コメント</p>
         </li>
-        {filteredTodoList.map((todo: TodoItem) => (
+        {filteredAndSortedTodoList.map((todo: TodoItem) => (
           <TodoItemComponent key={todo.id} todo={todo} />
         ))}
       </ul>
@@ -129,6 +139,20 @@ const TodoList = () => {
               <option value="未完了">未完了</option>
               <option value="途中">途中</option>
               <option value="完了">完了</option>
+            </select>
+          </div>
+          <div className="mb-3">
+            <h3 className="font-semibold">＜締め切りでソート＞</h3>
+            <select
+              className="border border-solid rounded p-2  border-slate-300"
+              value={sortByDate}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                setSortByDate(e.target.value as SortDate)
+              }
+            >
+              <option value="未選択">未選択</option>
+              <option value="昇順">昇順</option>
+              <option value="降順">降順</option>
             </select>
           </div>
         </div>

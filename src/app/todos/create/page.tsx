@@ -62,6 +62,21 @@ export default function CreateTodo() {
       return;
     }
 
+    if (todo?.title?.length === 0) {
+      setError("タイトルが未入力です。");
+      return;
+    }
+
+    if (todo?.content?.length === 0) {
+      setError("内容が未入力です。");
+      return;
+    }
+
+    if (todo?.deadline?.length === 0) {
+      setError("締め切りが未入力です。");
+      return;
+    }
+
     await addDoc(collection(db, "todos"), {
       title: todo?.title,
       content: todo?.content,
