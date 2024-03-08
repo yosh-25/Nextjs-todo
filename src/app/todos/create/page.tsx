@@ -6,7 +6,17 @@ import { useRouter } from "next/navigation";
 import { TodoItem } from "@/app/types";
 
 export default function CreateTodo() {
-  const [todo, setTodo] = useState<TodoItem | null>();
+  const [todo, setTodo] = useState<TodoItem>(
+    {
+      id: '',
+      title: '',
+      content: '',
+      deadline: '',
+      deadlineStatus: '',
+      status: '',
+      comment: '',
+      }
+  );
   const [error, setError] = useState("");
   const router = useRouter();
 
