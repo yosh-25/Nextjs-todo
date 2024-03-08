@@ -104,9 +104,13 @@ const TodoList = () => {
           <p className="outline-none w-1/6">締め切り</p>
           <p className="outline-none w-1/6">ステータス</p>
           <p className="outline-none w-1/6">コメント</p>
+          <p className="outline-none w-28"></p>
         </li>
         {filteredAndSortedTodoList.map((todo: TodoItem) => (
+          
           <TodoItemComponent key={todo.id} todo={todo} />
+ 
+        
         ))}
       </ul>
       <div className="flex flex-col justify-center">

@@ -106,7 +106,7 @@ export default function todoPage({ params }: { params: { id: string } }) {
       </ul>
       <div className="!mt-4 w-9/12">
         <div className="flex flex-col mb-8">
-          <p className="text-right text-xs mb-3" >↑直接入力で変更可</p>
+          <p className="text-right text-s mb-3" >（↑直接入力で変更可）</p>
           <div className="flex justify-end">
             <button
               type="button"

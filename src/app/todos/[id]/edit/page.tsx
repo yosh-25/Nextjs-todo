@@ -10,7 +10,15 @@ import { db } from "../../../../../lib/firebase";
 import { TodoItem } from "@/app/types";
 
 export default function todoEdit({ params }: { params: { id: string } }) {
-  const [todo, setTodo] = useState<TodoItem | undefined>(undefined);
+  const [todo, setTodo] = useState<TodoItem>({
+    id: "",
+    title: "",
+    content: "",
+    deadline: "",
+    deadlineStatus: "",
+    status: "",
+    comment: "",
+  });
   const [succeed, setSucceed] = useState<string>("");
   const id = params.id;
   const router = useRouter();
