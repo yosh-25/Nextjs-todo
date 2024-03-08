@@ -11,11 +11,10 @@ import {
 } from "firebase/firestore";
 import { db } from "../../../lib/firebase";
 import { TodoItem } from "../types";
-import TodoItemComponent from '../components/TodoItem'
+import TodoItemComponent from "../components/TodoItem";
 // import { useSession } from "next-auth/react";
 
 const TodoList = () => {
-
   type Filter = "全て" | "未完了" | "途中" | "完了";
   type FilterDate = "全て" | "期限前" | "今日" | "期限切れ";
 
@@ -46,72 +45,35 @@ const TodoList = () => {
   }, []);
 
   useEffect(() => {
-    const filteringTodoListByDate = () => {
-      const today = new Date(Date.now());
-
-      const filtered = todoList.map((todo) => {
-        const deadlineDate = new Date(todo.deadline ?? Date.now());
-        if (today < deadlineDate) {
-          return { ...todo, deadlineStatus: "期限前" };
-        }
-        if (today.toDateString() === deadlineDate.toDateString()) {
-          return { ...todo, deadlineStatus: "今日" };
-        } else {
-          return { ...todo, deadlineStatus: "期限切れ" };
-        }
-      });
-
-      switch (filterByDate) {
-        case "期限前":
-          setFilteredTodoList(
-            filtered.filter((todo: TodoItem) => todo.deadlineStatus === "期限前")
-          );
-          break;
-
-        case "今日":
-          setFilteredTodoList(
-            filtered.filter((todo: TodoItem) => todo.deadlineStatus === "今日")
-          );
-          break;
-
-        case "期限切れ":
-          setFilteredTodoList(
-            filtered.filter((todo: TodoItem) => todo.deadlineStatus === "期限切れ")
-          );
-          break;
-
-        default:
-          setFilteredTodoList(todoList);
-      }
-    };
-    filteringTodoListByDate();
-  }, [filterByDate, todoList]);
-
-  useEffect(() => {
     const filteringTodoList = () => {
-      switch (filterByStatus) {
-        case "未完了":
-          setFilteredTodoList(
-            todoList.filter((todoList) => todoList.status === "未完了")
-          );
-          break;
-        case "途中":
-          setFilteredTodoList(
-            todoList.filter((todoList) => todoList.status === "途中")
-          );
-          break;
-        case "完了":
-          setFilteredTodoList(
-            todoList.filter((todoList) => todoList.status === "完了")
-          );
-          break;
-
-        default:
-          setFilteredTodoList(todoList);
-      }
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+  
+      const filtered = todoList.filter((todo) => {
+        const deadlineDate = new Date(todo.deadline);
+        deadlineDate.setHours(0, 0, 0, 0);
+  
+        const BeforeDeadline = deadlineDate > today;
+        const Today = deadlineDate.getTime() === today.getTime();
+        const PastDeadline = deadlineDate < today;
+  
+        const statusMatch = filterByStatus === "全て" || todo.status === filterByStatus;
+  
+        if (filterByDate === "期限前" && BeforeDeadline && statusMatch) return true;
+        if (filterByDate === "今日" && Today && statusMatch) return true;
+        if (filterByDate === "期限切れ" && PastDeadline && statusMatch) return true;
+        if (filterByDate === "全て" && statusMatch) return true;
+  
+        return false;
+      });
+  
+      setFilteredTodoList(filtered);
     };
+  
     filteringTodoList();
-  }, [filterByStatus, todoList]);
+  }, [todoList, filterByDate, filterByStatus]);
+  
+ 
 
   const ClickMoveToCreate = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -134,7 +96,7 @@ const TodoList = () => {
           <p className="outline-none w-1/6">コメント</p>
         </li>
         {filteredTodoList.map((todo: TodoItem) => (
-         <TodoItemComponent key={todo.id} todo={todo} />
+          <TodoItemComponent key={todo.id} todo={todo} />
         ))}
       </ul>
       <div className="flex flex-col justify-center">
