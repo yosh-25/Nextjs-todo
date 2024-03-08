@@ -11,7 +11,7 @@ import { TodoItem } from "@/app/types";
 
 export default function todoEdit({ params }: { params: { id: string } }) {
   const [todo, setTodo] = useState<TodoItem | undefined>(undefined);
-  const [succeed, SetSucceed] = useState<string>("");
+  const [succeed, setSucceed] = useState<string>("");
   const id = params.id;
   const router = useRouter();
 
@@ -42,7 +42,7 @@ export default function todoEdit({ params }: { params: { id: string } }) {
       deadline: todo?.deadline,
       comment: todo?.comment,
     });
-    SetSucceed("保存できました！");
+    setSucceed("保存できました！");
   };
 
   const updateTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
